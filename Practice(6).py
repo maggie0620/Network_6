@@ -198,7 +198,7 @@ for remove_element in remove_possible_list:
     #print(remove_element, vcut_nodes)
     
     # Initialize
-    vcut = Condense(vcut_nodes, vcut_edges)    
+    vcut = Condense(vcut_nodes, vcut_edges) 
     index = 0
     low = {}
     dfs_num = {}
@@ -208,21 +208,33 @@ for remove_element in remove_possible_list:
 
     for k in range(0,len(vcut_edges)):
         vcut.graph[vcut_edges[k][0]].append(vcut_edges[k][1])
-    vcut_SCC = vcut.find_SCC()
-    #print(vcut_SCC)
+    # Append isolated nodes (No edges)
+    if len(vcut_edges) == 0:
+        for k in range(0,len(vcut_nodes)):
+            vcut.graph[vcut_nodes[k]].append("")
+    #print("#######",vcut.graph)
     
-    # If not strongly connected, then it is in vertex-cut subset
-    if len(vcut_SCC) != 1:
-        vcut_SCC_list.append(vcut_SCC)
+    # Find strongly connected component
+    new_vcut_SCC = []
+    vcut_SCC = vcut.find_SCC()
+    for sublist in vcut_SCC:
+        if sublist != ['']:
+            new_vcut_SCC.append(sublist)
+    #print(remove_element, new_vcut_SCC)
+    
+    # If not strongly connected (SCC_num > 1), then it is in vertex-cut subset
+    if len(new_vcut_SCC) > 1:
+        vcut_SCC_list.append(new_vcut_SCC)
         vertex_cut.append(remove_element)
-        #print(vcut.graph)
+        #print(vertex_cut)
+        #print(vcut_SCC_list)
 
 print("Vertex-cut subset:", vertex_cut)
 #print(vcut_SCC_list)
 
 # Vertex-connectivity
 min_size = len(vertex_cut[0])
-for j in range(0,len(vertex_cut)):
+for j in range(1,len(vertex_cut)):
     if len(vertex_cut[j]) < min_size: 
         min_size = len(vertex_cut[j])
 print("Vertex-connectivity =", min_size)
