@@ -212,7 +212,7 @@ for remove_element in remove_possible_list:
     if len(vcut_edges) == 0:
         for k in range(0,len(vcut_nodes)):
             vcut.graph[vcut_nodes[k]].append("")
-    #print("#######",vcut.graph)
+    #print(vcut.graph)
     
     # Find strongly connected component
     new_vcut_SCC = []
